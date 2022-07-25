@@ -25,9 +25,9 @@
                                             @foreach($banyakKios as $kios)
                                             @if($kios->status_kios === 0)
                                                 @if(old('kios_id') == $kios->id)
-                                                    <option value="{{ $kios->id }}" selected>{{ $kios->nama_kios }} || {{ $kios->luas_kios }}</option>
+                                                    <option value="{{ $kios->id }}" selected>{{ $kios->nama_kios }} || {{ $kios->tempat }}</option>
                                                 @else
-                                                    <option value="{{ $kios->id }}">{{ $kios->nama_kios }} || {{ $kios->luas_kios }}</option>
+                                                    <option value="{{ $kios->id }}">{{ $kios->nama_kios }} || {{ $kios->tempat }}</option>
                                                 @endif
                                             @endif
                                             @endforeach
@@ -73,6 +73,21 @@
                                             @endforeach
                                         </select>
                                         @error('lokasi_id')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="mb-3 col-lg-12">
+                                        <label for="use_plts" class="form-label">Menggunakan Listrik</label>
+                                        <select name="use_plts" id="use_plts" class="form-control @error('use_plts') is-invalid @enderror">
+                                            <option value="" disabled selected hidden>-- Pilih Tipe Listrik --</option>
+                                            <option value="1">PLTS(Pembangkit Listrik Tenaga Surya)</option>
+                                            <option value="0">PLN(Perusahaan Listrik Negara)</option>
+                                        </select>
+                                        @error('use_plts')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
                                             </div>

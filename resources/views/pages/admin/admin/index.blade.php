@@ -33,7 +33,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <a href="{{ route('master-admin.create') }}" class="btn btn-primary text-right">Tambah Data Admin</a>
+                        <a href="{{ route('master-admin.create') }}" class="btn btn-primary text-right" style="border-radius: 10px;"><i class="fa-solid fa-square-plus mr-2"></i> Data Admin</a>
                     </div>
                     <div class="card-body">
                         <table id="bootstrap-data-table" class="table table-striped table-bordered">

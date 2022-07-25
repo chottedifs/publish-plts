@@ -31,7 +31,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="mb-3 col-lg-12">
-                                        <label for="harga" class="form-label">Tarif Dasar Kwh</label>
+                                        <label for="harga" class="form-label">Tarif Kios</label>
                                         <input type="number" name="harga" class="form-control @error('harga') is-invalid @enderror" id="harga" value="{{ old("harga", $tarifKios->harga) }}">
                                         @error('harga')
                                             <div class="invalid-feedback">

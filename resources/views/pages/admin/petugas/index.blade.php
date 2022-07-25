@@ -33,7 +33,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <a href="{{ route('master-petugas.create') }}" class="btn btn-primary text-right">Tambah Data Petugas</a>
+                        <a href="{{ route('master-petugas.create') }}" class="btn btn-primary text-right" style="border-radius: 10px;"><i class="fa-solid fa-square-plus mr-2"></i> Data Petugas</a>
                     </div>
                     <div class="card-body">
                         <table id="bootstrap-data-table" class="table table-striped table-bordered">
@@ -60,11 +60,17 @@
                                     <td>{{ $petugas->nip }}</td>
                                     <td>{{ $petugas->no_hp }}</td>
                                     <td>{{ $petugas->Lokasi->nama_lokasi }}</td>
-                                    <td>
+                                    <td class="text-center">
                                         @if ($petugas->Login->is_active)
-                                        Aktif
+                                        <form action="{{ route('petugas-isActive', $petugas->id)}}" method="post">
+                                            @csrf
+                                            <button class="btn btn-success mb-2" style="border-radius: 10px;">Aktif</button>
+                                        </form>
                                         @else
-                                        Tidak Aktif
+                                        <form action="{{ route('petugas-isActive', $petugas->id)}}" method="post">
+                                            @csrf
+                                            <button class="btn btn-danger mb-2" style="border-radius: 10px;">Tidak Aktif</button>
+                                        </form>
                                         @endif
                                     </td>
                                     <td class="text-center">

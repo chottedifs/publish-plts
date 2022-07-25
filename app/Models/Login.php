@@ -52,6 +52,11 @@ class Login extends Authenticatable
         return $this->hasOne(Petugas::class);
     }
 
+    public function Plts(): HasOne
+    {
+        return $this->hasOne(Plts::class);
+    }
+
     public function Admin(): HasOne
     {
         return $this->hasOne(Admin::class);

@@ -34,7 +34,7 @@ class TarifKiosController extends Controller
 
         TarifKios::create($validatedData);
 
-        Alert::toast('Data penyewa kios berhasil ditambahkan!','success');
+        Alert::toast('Data Tarif kios berhasil ditambahkan!','success');
         return redirect(route('master-tarifKios.index'));
     }
 
@@ -64,7 +64,7 @@ class TarifKiosController extends Controller
         $tarifKios = TarifKios::findOrFail($id);
         $tarifKios->update($data);
 
-        Alert::toast('Data penyewa kios berhasil diupdate!','success');
+        Alert::toast('Data Tarif kios berhasil diupdate!','success');
         return redirect(route('master-tarifKios.index'));
     }
 

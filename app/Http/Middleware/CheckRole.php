@@ -17,15 +17,21 @@ class CheckRole
      */
     public function handle(Request $request, Closure $next)
     {
-        $roles = array_slice(func_get_args(),2);
+        $roles = [
+            'admin',
+            'operator',
+            'plts',
+            'user'
+        ];
+        // $roles = array_slice(func_get_args(),2);
 
+        // ddd($roles);
         foreach ($roles as $role) {
             $user = Auth::user()->roles;
             if (!$user == Auth::check() || $user == $role && Auth::user()->is_active){
                 return $next($request);
             }
         }
-
         abort(403, 'Unauthorized action.');
     }
 }

@@ -17,7 +17,7 @@ class CreateLoginsTable extends Migration
             $table->id();
             $table->string('email')->unique();
             $table->string('password');
-            $table->enum('roles', ['admin', 'operator', 'user'])->default('user');
+            $table->enum('roles', ['admin', 'operator', 'user', 'plts'])->default('user');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
             $table->softDeletes();

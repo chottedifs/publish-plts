@@ -33,7 +33,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <a href="{{ route('master-user.create') }}" class="btn btn-primary text-right">Tambah Data User</a>
+                        <a href="{{ route('master-user.create') }}" class="btn btn-primary text-right" style="border-radius: 10px;"><i class="fa-solid fa-square-plus mr-2"></i> Data User</a>
                     </div>
                     <div class="card-body">
                         <table id="bootstrap-data-table" class="table table-striped table-bordered">
@@ -64,9 +64,15 @@
                                     <td>{{ $user->rekening }}</td>
                                     <td>
                                         @if ($user->Login->is_active == 1)
-                                        Aktif
+                                        <form action="{{ route('user-isActive', $user->id)}}" method="post">
+                                            @csrf
+                                            <button class="btn btn-success mb-2" style="border-radius: 10px;">Aktif</button>
+                                        </form>
                                         @else
-                                        Tidak Aktif
+                                        <form action="{{ route('user-isActive', $user->id)}}" method="post">
+                                            @csrf
+                                            <button class="btn btn-danger mb-2" style="border-radius: 10px;">Tidak Aktif</button>
+                                        </form>
                                         @endif
                                     </td>
                                     <td class="text-center">

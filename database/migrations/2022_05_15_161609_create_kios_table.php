@@ -16,7 +16,7 @@ class CreateKiosTable extends Migration
         Schema::create('kios', function (Blueprint $table) {
             $table->id();
             $table->string('nama_kios');
-            $table->string('luas_kios');
+            $table->string('tempat');
             $table->boolean('status_kios');
             $table->timestamps();
             $table->softDeletes();

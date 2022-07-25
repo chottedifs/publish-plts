@@ -127,19 +127,22 @@ class UserController extends Controller
                     'password' => 'required|min:6'
                 ]);
                 $validatedData1['password'] = bcrypt($validatedData1['password']);
+                $user->Login->update($validatedData1);
             } else {
                 $validatedData1 = $request->validate([
                     'email' => 'required|email|unique:Logins,email'
                 ]);
+                $user->Login->update($validatedData1);
             }
         } elseif ($request->input('password') != null) {
             $validatedData1 = $request->validate([
                 'password' => 'required|min:6'
             ]);
             $validatedData1['password'] = bcrypt($validatedData1['password']);
+            $user->Login->update($validatedData1);
         }
 
-        $user->Login->update($validatedData1);
+
 
         $validatedData2['login_id'] = $user->login_id;
         $user->update($validatedData2);
@@ -158,5 +161,26 @@ class UserController extends Controller
     {
         // User::destroy($id);
         // return redirect(route('master-user.index'));
+    }
+
+    public function isActive($id)
+    {
+        // $user = User::with('Login')->where('id',$id)->get();
+        $user = User::with('Login')->findOrFail($id);
+        // ddd($user->Login->is_active);
+        if ($user->Login->is_active == 1) {
+            $active['is_active'] = 0;
+            $login = Login::findOrFail($user->Login->id);
+            $login->update($active);
+            // $user->Login->is_active->update($active);
+            Alert::toast('Data user berhasil di Non-aktifkan!','success');
+            return redirect(route('master-user.index'));
+        } elseif ($user->Login->is_active == 0) {
+            $active['is_active'] = 1;
+            $login = Login::findOrFail($user->Login->id);
+            $login->update($active);
+            Alert::toast('Data user berhasil di aktifkan!','success');
+            return redirect(route('master-user.index'));
+        }
     }
 }

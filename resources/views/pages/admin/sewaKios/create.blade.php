@@ -55,6 +55,17 @@
                                         @enderror
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="mb-3 col-lg-12">
+                                        <label for="tgl_sewa" class="form-label">Tanggal Sewa</label>
+                                        <input type="date" name="tgl_sewa" id="tgl_sewa" class="form-control">
+                                        @error('tgl_sewa')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </div>
                                 <button type="submit" class="btn btn-primary">Submit</button>
                             </form>
                         </div>

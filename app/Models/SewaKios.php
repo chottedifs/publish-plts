@@ -17,6 +17,9 @@ class SewaKios extends Model
         'user_id',
         'relasi_kios_id',
         'status_sewa',
+        'use_plts',
+        'tgl_sewa',
+        'tgl_akhir_sewa',
         'lokasi_id'
     ];
 
@@ -38,10 +41,5 @@ class SewaKios extends Model
     public function Lokasi(): BelongsTo
     {
         return $this->belongsTo(Lokasi::class);
-    }
-
-    public function HistoriKios(): HasMany
-    {
-        return $this->hasMany(HistoriKios::class);
     }
 }

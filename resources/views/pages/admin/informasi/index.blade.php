@@ -33,7 +33,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <a href="{{ route('master-informasi.create') }}" class="btn btn-primary text-right">Tambah Informasi</a>
+                        <a href="{{ route('master-informasi.create') }}" class="btn btn-primary text-right" style="border-radius: 10px;"><i class="fa-solid fa-square-plus mr-2"></i> Informasi</a>
                     </div>
                     <div class="card-body">
                         <table id="bootstrap-data-table" class="table table-striped table-bordered">
@@ -52,10 +52,14 @@
                                     <td class="serial">{{ $loop->iteration }}</td>
                                     <td>{{ $informasi->title }}</td>
                                     <td>{{ $informasi->deskripsi }}</td>
-                                    <td>{{ $informasi->gambar }}</td>
+                                    <td><img src="{{ Storage::url($informasi->gambar) }}" alt="" style="width: 150px;"></td>
                                     <td class="text-center">
-                                        <a href="{{ route('master-informasi.edit', $informasi->id) }}" class="btn-sm badge-warning" style="font-size: 14px; border-radius:10px;"><i class="fa fa-edit"></i></a>
-                                        <a href="{{ route('master-informasi.edit', $informasi->id) }}" class="btn-sm badge-warning" style="font-size: 14px; border-radius:10px;"><i class="fa fa-trash"></i></a>
+                                        <a href="{{ route('master-informasi.edit', $informasi->id) }}" class="btn-sm badge-warning" style="font-size: 14px; border-radius:10px; margin-right: 10px;"><i class="fa fa-edit"></i></a>
+                                        <form action="{{ route('master-informasi.destroy', $informasi->id) }}" method="post" class="d-inline">
+                                            @csrf
+                                            @method('delete')
+                                            <button class="btn btn-sm badge-danger" style="font-size: 14px; border-radius:10px;"><i class="fa fa-trash"></i></button>
+                                        </form>
                                     </td>
                                 </tr>
                                 @endforeach

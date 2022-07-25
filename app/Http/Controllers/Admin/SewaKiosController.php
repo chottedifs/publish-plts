@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\RelasiKios;
+use Carbon\Carbon;
+use
+    App\Models\RelasiKios;
 use App\Models\SewaKios;
-use App\Models\HistoriKios;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -18,15 +19,10 @@ class sewaKiosController extends Controller
         $roles = Auth::user()->roles;
         if ($roles == "operator") {
             $lokasiPetugas = Auth::user()->Petugas->lokasi_id;
-            // $lokasiKios = RelasiKios::with('Lokasi')->where('lokasi_id', $lokasiPetugas)->get();
-            $sewaKios = SewaKios::with('RelasiKios','HistoriKios')->where('lokasi_id', $lokasiPetugas)->get();
-            // $sewaKios = SewaKios::with('RelasiKios')->get();
+            $sewaKios = SewaKios::with('RelasiKios')->where('lokasi_id', $lokasiPetugas)->get();
         } elseif ($roles == "admin") {
-            $sewaKios = SewaKios::with('RelasiKios','HistoriKios')->get();
+            $sewaKios = SewaKios::with('RelasiKios')->get();
         }
-
-        // $sewaKios = SewaKios::with('RelasiKios','User')->get();
-        // ddd($sewaKios);
 
         return view('pages.admin.sewaKios.index', [
             'judul' => 'Data Sewa Kios',
@@ -41,8 +37,8 @@ class sewaKiosController extends Controller
         if ($roles == "operator") {
             $lokasiPetugas = Auth::user()->Petugas->lokasi_id;
             $user = User::with('Lokasi')->where('lokasi_id', $lokasiPetugas)->get();
-            $relasiKios = RelasiKios::with('Kios','Lokasi')->where('lokasi_id', $lokasiPetugas)->get();
-        } elseif($roles == "admin") {
+            $relasiKios = RelasiKios::with('Kios', 'Lokasi')->where('lokasi_id', $lokasiPetugas)->get();
+        } elseif ($roles == "admin") {
             $user = User::all();
             $relasiKios = RelasiKios::with('Kios')->get();
         }
@@ -58,35 +54,23 @@ class sewaKiosController extends Controller
     {
         $validatedData = $request->validate([
             'user_id' => 'required',
-            'relasi_kios_id' => 'required'
+            'relasi_kios_id' => 'required',
+            'tgl_sewa' => 'required'
         ]);
         $statusRelasiKios = RelasiKios::findOrFail($validatedData['relasi_kios_id']);
-        $statusRelasiKios['status_relasi_kios'] = true;
-        $statusRelasiKios->update();
 
         $validatedData['status_sewa'] = true;
+        $validatedData['use_plts'] = $statusRelasiKios->use_plts;
         $validatedData['lokasi_id'] = $statusRelasiKios['lokasi_id'];
         $sewa = SewaKios::create($validatedData);
 
-        //* Create Histori Kios
-        $dataHistori = [
-            'user_id' => $validatedData['user_id'],
-            'sewa_kios_id' => $sewa->id,
-            'tgl_awal_sewa' => date('Y-m-d H:i:s'),
-            'lokasi_id' => $validatedData['lokasi_id']
-        ];
-        HistoriKios::create($dataHistori);
+        $statusRelasiKios['status_relasi_kios'] = true;
+        $statusRelasiKios->update();
 
-        Alert::toast('Data penyewa kios berhasil ditambahkan!','success');
+        Alert::toast('Data penyewa kios berhasil ditambahkan!', 'success');
         return redirect(route('sewa-kios.index'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
@@ -99,13 +83,12 @@ class sewaKiosController extends Controller
         if ($roles == "operator") {
             $lokasiPetugas = Auth::user()->Petugas->lokasi_id;
             $user = User::with('Lokasi')->where('lokasi_id', $lokasiPetugas)->get();
-            $relasiKios = RelasiKios::with('Kios','Lokasi')->where('lokasi_id', $lokasiPetugas)->get();
-        } elseif($roles == "admin") {
+            $relasiKios = RelasiKios::with('Kios', 'Lokasi')->where('lokasi_id', $lokasiPetugas)->get();
+        } elseif ($roles == "admin") {
             $user = User::all();
             $relasiKios = RelasiKios::with('Kios')->get();
-            // $banyakLokasi = Lokasi::all();
         }
-        // ddd($user);
+
         return view('pages.admin.sewaKios.edit', [
             'judul' => 'Edit Data Sewa Kios',
             'sewaKios' => $sewaKios,
@@ -116,50 +99,105 @@ class sewaKiosController extends Controller
 
     public function update(Request $request, $id)
     {
-        $sewaKios = SewaKios::findOrFail($id);
-        $historiSebelumnya = HistoriKios::where('user_id', $sewaKios->user_id)->get()->last();
-
-        // ddd($historiSebelumnya->tgl_awal_sewa);
+        $sewaKios = SewaKios::with('RelasiKios', 'Tagihan')->where('id', $id)->get();
 
         // Validasi Input
         $validatedData = $request->validate([
+            'user_id' => 'required',
+            'relasi_kios_id' => 'required',
+        ]);
+
+        $statusRelasiKios = RelasiKios::findOrFail($validatedData['relasi_kios_id']);
+        if ($validatedData['user_id'] != $sewaKios[0]->user_id) {
+            if ($validatedData['relasi_kios_id'] != $sewaKios[0]->relasi_kios_id) {
+                //? jika user dan kios berubah
+                $validatedData = $request->validate([
+                    'user_id' => 'required',
+                    'relasi_kios_id' => 'required'
+                ]);
+                // $relasiKios = RelasiKios::findOrFail()
+                //? mengisi tgl akhir sewa dan status sewanya menjadi false
+                $sewaSebelumnya['tgl_akhir_sewa'] = date('Y-m-d');
+                $sewaSebelumnya['status_sewa'] = false;
+                $sewaKios[0]->update($sewaSebelumnya);
+                //? membuat status relasi kios sebelumnya menjadi false
+                $relasiKiosSebelumnya['status_relasi_kios'] = false;
+                $sewaKios[0]->RelasiKios->update($relasiKiosSebelumnya);
+                //? membuat data baru dengan user yg berbeda dan kios yg berbeda
+                $statusRelasiKios['status_relasi_kios'] = true;
+                $statusRelasiKios->update();
+                $validatedData['tgl_sewa'] = Carbon::now()->format('Y-m-d');
+                $validatedData['status_sewa'] = true;
+                $validatedData['lokasi_id'] = $statusRelasiKios['lokasi_id'];
+                SewaKios::create($validatedData);
+                Alert::toast('Data penyewa User Dan Kios berhasil Di Update!', 'success');
+                return redirect(route('sewa-kios.index'));
+            } else {
+                //? jika user berbeda dan relasi kios nya tetap sama
+                $validatedData = $request->validate([
+                    'user_id' => 'required',
+                    'relasi_kios_id' => 'required',
+                ]);
+                //? mengubah status sewa sebelumnya
+                $sewaSebelumnya['tgl_akhir_sewa'] = date('Y-m-d');
+                $sewaSebelumnya['status_sewa'] = false;
+                $sewaKios[0]->update($sewaSebelumnya);
+                //? membuat data sewa yg baru
+                $validatedData['tgl_sewa'] = Carbon::now()->format('Y-m-d');
+                $validatedData['status_sewa'] = true;
+                $validatedData['lokasi_id'] = $statusRelasiKios['lokasi_id'];
+                SewaKios::create($validatedData);
+                Alert::toast('Data penyewa User berhasil Di Update!', 'success');
+                return redirect(route('sewa-kios.index'));
+            }
+        } elseif ($validatedData['relasi_kios_id'] != $sewaKios[0]->relasi_kios_id) {
+            //? jika usernya sama tapi relasi kios nya berbeda
+            $validatedData = $request->validate([
                 'user_id' => 'required',
                 'relasi_kios_id' => 'required'
             ]);
-
-        if ($sewaKios != $historiSebelumnya){
-            $updateHistori = [
-                'tgl_awal_sewa' => $historiSebelumnya->tgl_awal_sewa,
-                'tgl_akhir_sewa' => date('Y-m-d H:i:s')
-            ];
-            HistoriKios::where('user_id', $sewaKios->user_id)->update($updateHistori);
+            //? mengubah status sewa sebelumnya
+            $sewaSebelumnya['tgl_akhir_sewa'] = date('Y-m-d');
+            $sewaSebelumnya['status_sewa'] = false;
+            $sewaKios[0]->update($sewaSebelumnya);
+            //? membuat status relasi kios sebelumnya menjadi false
+            $relasiKiosSebelumnya['status_relasi_kios'] = false;
+            $sewaKios[0]->RelasiKios->update($relasiKiosSebelumnya);
+            //? membuat data baru dengan user yg sama dan kios yg berbeda
+            $statusRelasiKios['status_relasi_kios'] = true;
+            $statusRelasiKios->update();
+            $validatedData['tgl_sewa'] = Carbon::now()->format('Y-m-d');
+            $validatedData['status_sewa'] = true;
+            $validatedData['lokasi_id'] = $statusRelasiKios['lokasi_id'];
+            SewaKios::create($validatedData);
+            Alert::toast('Data penyewa Kios berhasil Di Update!', 'success');
+            return redirect(route('sewa-kios.index'));
+        } else {
+            Alert::toast('Data penyewa Kios tidak ada yang di Update!', 'success');
+            return redirect(route('sewa-kios.index'));
         }
-
-        // ddd($updateHistori);
-
-        $sewaKios->update($validatedData);
-
-        // Create Histori Kios
-        $dataHistori = [
-            'user_id' => $validatedData['user_id'],
-            'sewa_kios_id' => $sewaKios->id,
-            'tgl_awal_sewa' => date('Y-m-d H:i:s'),
-            'lokasi_id' => $sewaKios->lokasi_id
-        ];
-        HistoriKios::create($dataHistori);
-
-        Alert::toast('Data penyewa kios berhasil diupdate!','success');
-        return redirect(route('sewa-kios.index'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         //
+    }
+
+    public function isActive($id)
+    {
+        $kios = SewaKios::findOrFail($id);
+        if ($kios->status_sewa == 1) {
+            $active['status_sewa'] = 0;
+            $kios->update($active);
+
+            Alert::toast('Data sewa kios berhasil di Non-aktifkan!', 'success');
+            return redirect(route('sewa-kios.index'));
+        } elseif ($kios->status_sewa == 0) {
+            $active['status_sewa'] = 1;
+            $kios->update($active);
+
+            Alert::toast('Data sewa kios berhasil di aktifkan!', 'success');
+            return redirect(route('sewa-kios.index'));
+        }
     }
 }

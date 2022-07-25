@@ -21,19 +21,24 @@ class Lokasi extends Model
         return $this->hasMany(RelasiKios::class, 'lokasi_id', 'id');
     }
 
-    public function HistoriKios(): HasMany
-    {
-        return $this->hasMany(HistoriKios::class, 'lokasi_id', 'id');
-    }
-
     public function Petugas(): HasMany
     {
         return $this->hasMany(Petugas::class, 'lokasi_id', 'id');
     }
 
+    public function Plts(): HasMany
+    {
+        return $this->hasMany(Plts::class, 'lokasi_id', 'id');
+    }
+
     public function SewaKios(): HasMany
     {
         return $this->hasMany(SewaKios::class, 'lokasi_id', 'id');
+    }
+
+    public function Tagihan(): HasMany
+    {
+        return $this->hasMany(Tagihan::class, 'lokasi_id', 'id');
     }
 
     public function User(): HasMany
@@ -44,5 +49,10 @@ class Lokasi extends Model
     public function Admin(): HasMany
     {
         return $this->hasMany(Admin::class, 'lokasi_id', 'id');
+    }
+
+    public function Pembayaran(): HasMany
+    {
+        return $this->hasMany(Pembayaran::class, 'lokasi_id', 'id');
     }
 }

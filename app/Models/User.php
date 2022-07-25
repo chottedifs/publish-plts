@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, HasApiTokens;
 
     protected $fillable = [
         'nama_lengkap',
@@ -27,9 +28,9 @@ class User extends Model
         return $this->hasOne(SewaKios::class, 'user_id', 'id');
     }
 
-    public function HistoriKios(): HasOne
+    public function Tagihan(): HasOne
     {
-        return $this->hasOne(HistoriKios::class, 'user_id', 'id');
+        return $this->hasOne(Tagihan::class, 'user_id', 'id');
     }
 
     public function Lokasi(): BelongsTo

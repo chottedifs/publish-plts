@@ -36,14 +36,13 @@ class InformasiController extends Controller
             'gambar.*' => 'mimes:jpg,jpeg,png|max:1000',
         ]);
 
-        if ($request->hasfile('gambar')) {
-            $gambar = date('Ymd-His').'-'.str_replace(' ','-', $request->file('gambar')->getClientOriginalName());
-            $request->file('gambar')->move(public_path('images'), $gambar);
-            Informasi::create($validatedData);
+        $validatedData['gambar'] = $request->file('gambar')->store(
+            'images', 'public'
+        );
+        Informasi::create($validatedData);
 
-            Alert::toast('Data informasi berhasil ditambahkan!','success');
-            return redirect(route('master-informasi.index'));
-        }
+        Alert::toast('Data informasi berhasil ditambahkan!','success');
+        return redirect(route('master-informasi.index'));
     }
 
     /**
@@ -69,6 +68,9 @@ class InformasiController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->all();
+        $data['gambar'] = $request->file('gambar')->store(
+            'images', 'public'
+        );
         $informations = Informasi::findOrFail($id);
         $informations->update($data);
 
@@ -78,7 +80,10 @@ class InformasiController extends Controller
 
     public function destroy($id)
     {
-        Informasi::destroy($id);
+        $informations = Informasi::findOrFail($id);
+        $informations->delete();
+
+        Alert::toast('Data informasi berhasil dihapus!','success');
         return redirect(route('master-informasi.index'));
     }
 }

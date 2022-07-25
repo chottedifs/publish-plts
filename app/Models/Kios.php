@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Kios extends Model
@@ -12,7 +13,7 @@ class Kios extends Model
 
     protected $fillable = [
         'nama_kios',
-        'luas_kios',
+        'tempat',
         'status_kios'
     ];
 

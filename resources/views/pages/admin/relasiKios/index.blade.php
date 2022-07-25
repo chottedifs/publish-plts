@@ -34,7 +34,7 @@
                 <div class="card">
                     <div class="card-header">
                         @can('admin')
-                        <a href="{{ route('master-relasiKios.create') }}" class="btn btn-primary text-right">Tentukan Data kios</a>
+                        <a href="{{ route('master-relasiKios.create') }}" class="btn btn-primary text-right" style="border-radius: 10px;"><i class="fa-solid fa-square-plus mr-2"></i> Kelola Kios</a>
                         @endcan
                     </div>
                     <div class="card-body">
@@ -43,9 +43,9 @@
                                 <tr>
                                     <th class="serial">#</th>
                                     <th>Nama Kios</th>
-                                    <th>Luas Kios</th>
                                     <th>Lokasi Kios</th>
                                     <th>Tipe Kios</th>
+                                    <th>Tipe Listrik</th>
                                     <th>Harga Kios</th>
                                     @can('admin')
                                     <th class="text-center">Action</th>
@@ -57,9 +57,13 @@
                                 <tr>
                                     <td class="serial">{{ $loop->iteration }}</td>
                                     <td>{{ $dataKios->Kios->nama_kios }}</td>
-                                    <td>{{ $dataKios->Kios->luas_kios }}</td>
                                     <td>{{ $dataKios->Lokasi->nama_lokasi }}</td>
                                     <td>{{ $dataKios->TarifKios->tipe }}</td>
+                                    @if($dataKios->use_plts == '1')
+                                        <td>PLTS</td>
+                                    @else
+                                        <td>PLN</td>
+                                    @endif
                                     <td>{{ 'Rp '.number_format($dataKios->TarifKios->harga,0,',','.') }}</td>
                                     @can('admin')
                                     <td class="text-center">

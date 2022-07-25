@@ -103,20 +103,25 @@ class AdminController extends Controller
                     'password' => 'required|min:6'
                 ]);
                 $validatedData1['password'] = bcrypt($validatedData1['password']);
+                // Update data database
+                $admin->Login->update($validatedData1);
             } else {
                 $validatedData1 = $request->validate([
                     'email' => 'required|email|unique:Logins,email'
                 ]);
+                // Update data database
+                $admin->Login->update($validatedData1);
             }
         } elseif ($request->input('password') != null) {
             $validatedData1 = $request->validate([
                 'password' => 'required|min:6'
             ]);
             $validatedData1['password'] = bcrypt($validatedData1['password']);
+            // Update data database
+            $admin->Login->update($validatedData1);
         }
 
-        // Update data database
-        $admin->Login->update($validatedData1);
+
         $validatedData2['login_id'] = $admin->login_id;
         $admin->update($validatedData2);
 

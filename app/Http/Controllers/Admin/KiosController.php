@@ -29,12 +29,12 @@ class KiosController extends Controller
     {
         $validatedData = $request->validate([
             'nama_kios' => 'required|max:255',
-            'luas_kios' => 'required'
+            'tempat' => 'required'
         ]);
         $validatedData['status_kios'] = false;
         Kios::create($validatedData);
 
-        Alert::toast('Kios berhasil ditambahkan!','success');
+        Alert::toast('Kios berhasil ditambahkan!', 'success');
         return redirect(route('master-kios.index'));
     }
 
@@ -62,7 +62,7 @@ class KiosController extends Controller
     {
         $validatedData = $request->validate([
             'nama_kios' => 'required|max:255',
-            'luas_kios' => 'required'
+            'tempat' => 'required'
         ]);
 
         $data = $request->all();
@@ -70,7 +70,7 @@ class KiosController extends Controller
         $kios = Kios::findOrFail($id);
         $kios->update($data);
 
-        Alert::toast('Kios berhasil diupdate!','success');
+        Alert::toast('Kios berhasil diupdate!', 'success');
         return redirect(route('master-kios.index'));
     }
 
