@@ -110,5 +110,19 @@ class DatabaseSeeder extends Seeder
             'no_hp' => '0897129202100',
             'jenis_kelamin' => 'Laki-Laki'
         ]);
+
+        Kios::create ([
+            'nama_kios' => 'B-0001',
+            'tempat' => 'Basement',
+            'status_kios' => 0
+        ]);
+
+        RelasiKios::create ([
+            'kios_id' => 1,
+            'lokasi_id' => 1,
+            'tarif_kios_id' => 1,
+            'status_relasi_kios' => 1,
+            'use_plts' => 1
+        ]);
     }
 }
