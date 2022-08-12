@@ -10,7 +10,7 @@ class ResponseFormatter {
             'status' => 'success',
             'message' => null
         ],
-        'data' => null
+        'data' => null,
     ];
 
     public static function success($data = null, $message = null){

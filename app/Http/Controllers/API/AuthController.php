@@ -21,19 +21,21 @@ class AuthController extends Controller
         $token = $user->createToken('token-name')->plainTextToken;
 
         $response = [
-            'id' => $user->id,
-            'email' => $user->email,
-            'nama_lengkap' => $user->User->nama_lengkap,
-            'no_hp' => $user->User->no_hp,
-            'no_rekening' => $user->User->rekening,
-            'lokasi' => $user->User->Lokasi->nama_lokasi,
+            'user' => [
+                'id' => $user->id,
+                'email' => $user->email,
+                'nama_lengkap' => $user->User->nama_lengkap,
+                'no_hp' => $user->User->no_hp,
+                'no_rekening' => $user->User->rekening,
+                'lokasi' => $user->User->Lokasi->nama_lokasi,
+            ],
             'token' => $token
         ];
 
         if($response)
-            return ResponseFormatter::success($response, 'Data Sewa Kios Berhasil di Ambil');
+            return ResponseFormatter::success($response,'Data User Berhasil di Ambil');
         else
-            return ResponseFormatter::error(null, 'Data Sewa Kios Tidak Ada', 404);
+            return ResponseFormatter::error(null, 'Data User Tidak Ada', 404);
     }
 
     public function logout()
