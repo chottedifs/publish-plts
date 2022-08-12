@@ -12,7 +12,7 @@ use Auth;
 class SewaKiosController extends Controller
 {
     public function all(Request $request){
-        $kios = SewaKios::with('RelasiKios')->where('user_id', Auth::user()->User->id)->get();
+        $kios = SewaKios::with('RelasiKios', 'Tagihan')->where('user_id', Auth::user()->User->id)->get();
 
         foreach ($kios as $dataKios){
             $response[] = [
@@ -21,7 +21,13 @@ class SewaKiosController extends Controller
                 'tipe_kios' => $dataKios->RelasiKios->TarifKios->tipe,
                 'tarif_kios' => $dataKios->RelasiKios->TarifKios->harga,
                 'tempat_kios' => $dataKios->RelasiKios->Kios->tempat,
-                'lokasi_kios' => $dataKios->RelasiKios->Lokasi->nama_lokasi
+                'lokasi_kios' => $dataKios->RelasiKios->Lokasi->nama_lokasi,
+                'tagihan_terakhir' => [
+                    'total_tagihan' => $dataKios->Tagihan->tagihan_kios+$dataKios->Tagihan->tagihan_kwh,
+                    'total_kwh' => $dataKios->Tagihan->total_kwh,
+                    'date' => date('m-Y', strtotime($dataKios->Tagihan->periode)),
+                    'status_tagihan' => $dataKios->Tagihan->MasterStatus->nama_status
+                ]
             ];
         };
 
