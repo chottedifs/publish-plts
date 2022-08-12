@@ -23,44 +23,19 @@ class ReportExcelTagihan implements FromCollection, WithMapping, WithHeadings, S
 {
     use RegistersEventListeners;
 
+    protected $dataTagihan;
+    public function __construct($tagihan)
+    {
+        $this->dataTagihan = $tagihan;
+    }
+
     public function collection()
     {
-        $login = Auth::user();
-        $data = Tagihan::all()->last();
-        $dataPeriode = $data->periode;
-        $bulanP = explode('-', $dataPeriode);
-        if ($login->roles == "admin") {
-            // ddd($dataPeriode);
-            // ddd($bulanP[1]);
-            $dataTagihan = Tagihan::with('SewaKios')->where('master_status_id', 1)->whereMonth('periode', $bulanP[1])->orWhere('master_status_id', 4)->get();
-            // $lokasiPlts = Auth::user()->Plts->lokasi_id;
-            // // $lokasiKios = RelasiKios::with('Lokasi')->where('lokasi_id', $lokasiPlts)->get();
-            // $tagihan = tagihan::with('RelasiKios')->where([
-            //     'lokasi_id' => $lokasiPlts,
-            //     'status_sewa' => 1
-            //     ])->get();
-            // // $tagihan = tagihan::with('RelasiKios')->get();
-        } elseif ($login->roles == "operator") {
-            $petugas = Petugas::where('login_id', $login->id)->get();
-            // $tagihan = Tagihan::with('RelasiKios', 'User')->where(['status_sewa' => 1, 'lokasi_id' => $petugas[0]->lokasi_id])->get();
-            $dataTagihan = Tagihan::with('SewaKios')->where([
-                'master_status_id' => 1,
-                'lokasi_id' => $petugas[0]->lokasi_id
-            ])->whereMonth('periode', $bulanP[1])->orWhere('master_status_id', 4)->get();
-        }
-        // elseif ($roles == "admin") {
-        //     $tagihan = tagihan::with('RelasiKios')->where('status_sewa', 1)->get();
-        // }
-
-        return $dataTagihan;
+        return $this->dataTagihan;
     }
 
     public function map($dataTagihan): array
     {
-        // $tarif_dasar = TarifKwh::select('harga')->first();
-        // $tanggal = date('M Y');
-
-        // ddd($tarif_dasar);
         return [
             $dataTagihan->kode_tagihan,
             $dataTagihan->SewaKios->User->nama_lengkap,

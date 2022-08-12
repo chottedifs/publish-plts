@@ -23,7 +23,7 @@
                                         <select name="kios_id" id="kios_id" class="form-control @error('kios_id') is-invalid @enderror">
                                             <option value="" disabled selected hidden>-- Pilih Data Kios --</option>
                                             @foreach($banyakKios as $kios)
-                                            @if($kios->status_kios === 0)
+                                            @if($kios->status_kios == 0)
                                                 @if(old('kios_id') == $kios->id)
                                                     <option value="{{ $kios->id }}" selected>{{ $kios->nama_kios }} || {{ $kios->tempat }}</option>
                                                 @else

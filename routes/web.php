@@ -52,7 +52,7 @@ Route::middleware(['checkRole:admin,operator'])->group(function () {
     Route::resource('dashboard/pembayaran', PembayaranController::class);
     Route::post('dashboard/sewa-kios/{id}', [SewaKiosController::class, 'isActive'])->name('sewa-isActive');
     Route::get('dashboard/histori-tagihan', [HistoriTagihanController::class, 'index'])->name('historiTagihan');
-    Route::post('dashboard/histori-tagihan/{id}', [HistoriTagihanController::class, 'isActive'])->name('tagihan-isActive');
+    Route::post('dashboard/histori-tagihan/{id}', [HistoriTagihanController::class, 'StatusPembayaran'])->name('tagihan-StatusPembayaran');
 });
 
 //Route Super Admin, Plts, Operator
@@ -65,9 +65,9 @@ Route::middleware(['checkRole:admin,operator,plts'])->group(function () {
     Route::get('dashboard/tagihan-export', [TagihanController::class, 'create'])->name('export-tagihan');
     Route::get('dashboard/tagihan-report', [TagihanController::class, 'export'])->name('export-laporan');
     Route::post('dashboard/tagihan-import', [TagihanController::class, 'import'])->name('import-tagihan');
-    Route::get('dashboard/tagihan-diskon', [TagihanController::class, 'createDiskon'])->name('export-tagihan-diskon');
-    Route::get('dashboard/report-tagihan', [TagihanController::class, 'reportExcelTagihan'])->name('report-tagihan');
-    Route::get('dashboard/cetak-tagihan', [TagihanController::class, 'reportTagihan'])->name('cetak-tagihan');
+    Route::get('dashboard/tagihan-diskon/{bulan}/{lokasi}', [TagihanController::class, 'createDiskon'])->name('export-tagihan-diskon');
+    Route::get('dashboard/report-tagihan/{bulan}/{lokasi}', [TagihanController::class, 'reportExcelTagihan'])->name('report-tagihan');
+    Route::get('dashboard/cetak-tagihan/{bulan}/{lokasi}', [TagihanController::class, 'reportTagihan'])->name('cetak-tagihan');
     Route::post('dashboard/tagihan-diskonImport', [TagihanController::class, 'importDiskon'])->name('import-tagihan-diskon');
 });
 

@@ -25,11 +25,10 @@ class UserController extends Controller
             $user = User::with('Lokasi')->get();
         }
         // $user = User::with('Lokasi')->get();
-        return view('pages.admin.user.index',[
+        return view('pages.admin.user.index', [
             'judul' => 'Biodata User',
             'users' => $user
         ]);
-
     }
 
     public function create()
@@ -38,7 +37,7 @@ class UserController extends Controller
         if ($roles == "operator") {
             $lokasiPetugas = Auth::user()->Petugas->lokasi_id;
             $banyakLokasi = Lokasi::where('id', $lokasiPetugas)->get();
-        } elseif($roles == "admin") {
+        } elseif ($roles == "admin") {
             $banyakLokasi = Lokasi::all();
         }
         return view('pages.admin.user.create', [
@@ -56,9 +55,9 @@ class UserController extends Controller
         $validatedData2 = $request->validate([
             'nama_lengkap' => 'required|max:255',
             'lokasi_id' => 'required',
-            'nik' => 'required|numeric',
+            'nik' => 'required|numeric|digits_between:15,16',
             'rekening' => 'required|numeric',
-            'no_hp' => 'required|numeric',
+            'no_hp' => 'required|numeric|digits_between:12,13',
             'jenis_kelamin' => 'required'
         ]);
         $validatedData1['password'] = bcrypt($validatedData1['password']);
@@ -70,7 +69,7 @@ class UserController extends Controller
         $validatedData2['login_id'] = $login->id;
         User::create($validatedData2);
 
-        Alert::toast('Data user berhasil ditambahkan!','success');
+        Alert::toast('Data user berhasil ditambahkan!', 'success');
         return redirect(route('master-user.index'));
     }
 
@@ -94,7 +93,7 @@ class UserController extends Controller
         if ($roles == "operator") {
             $lokasiPetugas = Auth::user()->Petugas->lokasi_id;
             $banyakLokasi = Lokasi::where('id', $lokasiPetugas)->get();
-        } elseif($roles == "admin") {
+        } elseif ($roles == "admin") {
             $banyakLokasi = Lokasi::all();
         }
 
@@ -147,7 +146,7 @@ class UserController extends Controller
         $validatedData2['login_id'] = $user->login_id;
         $user->update($validatedData2);
 
-        Alert::toast('Data user berhasil diupdate!','success');
+        Alert::toast('Data user berhasil diupdate!', 'success');
         return redirect(route('master-user.index'));
     }
 
@@ -173,13 +172,13 @@ class UserController extends Controller
             $login = Login::findOrFail($user->Login->id);
             $login->update($active);
             // $user->Login->is_active->update($active);
-            Alert::toast('Data user berhasil di Non-aktifkan!','success');
+            Alert::toast('Data user berhasil di Non-aktifkan!', 'success');
             return redirect(route('master-user.index'));
         } elseif ($user->Login->is_active == 0) {
             $active['is_active'] = 1;
             $login = Login::findOrFail($user->Login->id);
             $login->update($active);
-            Alert::toast('Data user berhasil di aktifkan!','success');
+            Alert::toast('Data user berhasil di aktifkan!', 'success');
             return redirect(route('master-user.index'));
         }
     }

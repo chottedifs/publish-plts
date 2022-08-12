@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Cetak Tagihan {{ date('F') }}</title>
+    {{-- <link rel="stylesheet" href="{{ asset('assets/template/assets/library/bootstrap/bootstrap.min.css') }}"> --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
     <style>
         section {
@@ -39,7 +40,7 @@
     <hr>
     <section>
         <h5 class="title-letter text-center" style="text-transform: uppercase;">Surat Tagihan Sewa Kios dan Listrik</h5>
-        <p class="text-center" style="text-transform: uppercase; font-size: 16px;">Bulan {{ date('F') }} Tahun {{ date('Y') }}</p>
+        <p class="text-center" style="text-transform: uppercase; font-size: 16px;">Bulan {{ date('F', strtotime($bulan)) }} Tahun {{ date('Y') }}</p>
     </section>
     <section style="margin-top: 60px;">
         <p class="body-letter">

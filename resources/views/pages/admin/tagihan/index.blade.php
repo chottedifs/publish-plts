@@ -41,13 +41,13 @@
                         @endcan
                         @can('admin')
                             <div class="float-right">
-                                <a href="{{ route('export-tagihan-diskon') }}" class="btn btn-success text-right" style="border-radius: 10px;"><i class="fa-solid fa-file-export mr-2"></i> Template Diskon</a>
+                                <a id="tagihan-diskon" onclick="kirimDataDiskon()" target="_blank" class="btn btn-success text-white text-right" style="border-radius: 10px;"><i class="fa-solid fa-file-export mr-2"></i> Template Diskon</a>
                                 <button type="button" data-toggle="modal" data-target="#exampleModal" class="btn btn-primary text-right" style="border-radius: 10px;"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>Upload Template</button>
                             </div>
                         @endcan
                         @can('operator')
                             <div class="float-right">
-                                <a href="{{ route('export-tagihan-diskon') }}" class="btn btn-success text-right" style="border-radius: 10px;"><i class="fa-solid fa-file-export mr-2"></i> Template Diskon</a>
+                                <a id="tagihan-diskon" onclick="kirimDataDiskon()" target="_blank" class="btn btn-success text-white text-right" style="border-radius: 10px;"><i class="fa-solid fa-file-export mr-2"></i> Template Diskon</a>
                                 <button type="button" data-toggle="modal" data-target="#exampleModal" class="btn btn-primary text-right" style="border-radius: 10px;"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>Upload Template</button>
                             </div>
                         @endcan
@@ -57,31 +57,58 @@
                                 <label for="bulanTagihan" class="mr-2">Periode Tagihan</label>
                                 <input type="month" class="form-control" name="bulanTagihan" id="bulanTagihan" value="{{ old('bulanTagihan', $periode) }}">
                             </div>
-                            <div class="form-group mx-sm-3 mb-2">
-                                <select name="lokasi" id="lokasi" class="form-control @error('lokasi') is-invalid @enderror">
-                                    <option value=" ">-Pilih Lokasi-</option>
-                                    @foreach ($banyakLokasi as $lokasi)
-                                        @if (old('lokasi') == $lokasi->id)
-                                            <option value="{{ $lokasi->id }}" selected>{{ $lokasi->nama_lokasi }}</option>
-                                        @else
-                                            <option value="{{ $lokasi->id }}">{{ $lokasi->nama_lokasi }}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                            </div>
+                            @can('admin')
+                                <div class="form-group mx-sm-3 mb-2">
+                                    <select name="lokasi" id="lokasi" class="form-control @error('lokasi') is-invalid @enderror">
+                                        <option value="0">-Pilih Lokasi-</option>
+                                        @foreach ($banyakLokasi as $lokasi)
+                                            @if (old('lokasi') == $lokasi->id)
+                                                <option value="{{ $lokasi->id }}" selected>{{ $lokasi->nama_lokasi }}</option>
+                                            @else
+                                                <option value="{{ $lokasi->id }}">{{ $lokasi->nama_lokasi }}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @endcan
+                            @can('plts')
+                                <div class="form-group mx-sm-3 mb-2">
+                                    <select name="lokasi" id="lokasi" class="form-control @error('lokasi') is-invalid @enderror">
+                                        <option value="0">-Pilih Lokasi-</option>
+                                        @foreach ($banyakLokasi as $lokasi)
+                                            @if (old('lokasi') == $lokasi->id)
+                                                <option value="{{ $lokasi->id }}" selected>{{ $lokasi->nama_lokasi }}</option>
+                                            @else
+                                                <option value="{{ $lokasi->id }}">{{ $lokasi->nama_lokasi }}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @endcan
+                            @can('operator')
+                                <div class="form-group mx-sm-3 mb-2">
+                                    <select name="lokasi" id="lokasi" class="form-control @error('lokasi') is-invalid @enderror">
+                                        @foreach ($banyakLokasi as $lokasi)
+                                            @if ($lokasi_id == $lokasi->id)
+                                                <option value="{{ $lokasi->id }}" selected>{{ $lokasi->nama_lokasi }}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @endcan
                             <button type="submit" class="btn btn-primary mb-2" style="border-radius: 10px;">Cari Tagihan</button>
                         </form>
                     </div>
                     <div class="card-body">
                         @can('admin')
-                            <a href="{{ route('report-tagihan') }}" class="btn btn-success text-right mb-3" style="border-radius: 10px;"><i class="fa-solid fa-file-export mr-2"></i> Laporan Tagihan </a>
-                            <a href="{{ route('cetak-tagihan') }}" target="_blank" class="btn btn-success text-right mb-3" style="border-radius: 10px;"><i class="fa-solid fa-print mr-2"></i> Cetak Tagihan </a>
+                            <button id="laporan_tagihan" onclick="kirimDataExel()" class="btn btn-success text-right mb-3" style="border-radius: 10px;"><i class="fa-solid fa-file-export mr-2"></i> Laporan Tagihan </button>
+                            <a id="cetak-tagihan" onclick="kirimDataCetak()" target="_blank" class="btn btn-success text-right text-white mb-3" style="border-radius: 10px;"><i class="fa-solid fa-print mr-2"></i> Cetak Tagihan </a>
                         @endcan
                         @can('operator')
-                            <a href="{{ route('report-tagihan') }}" class="btn btn-success text-right mb-3" style="border-radius: 10px;"><i class="fa-solid fa-file-export mr-2"></i> Laporan Tagihan </a>
-                            <a href="{{ route('cetak-tagihan') }}" target="_blank" class="btn btn-success text-right mb-3" style="border-radius: 10px;"><i class="fa-solid fa-print mr-2"></i> Cetak Tagihan </a>
+                            <button id="laporan_tagihan" onclick="kirimDataExel()" class="btn btn-success text-right mb-3" style="border-radius: 10px;"><i class="fa-solid fa-file-export mr-2"></i> Laporan Tagihan </button>
+                            <a id="cetak-tagihan" onclick="kirimDataCetak()" target="_blank" class="btn btn-success text-right text-white mb-3" style="border-radius: 10px;"><i class="fa-solid fa-print mr-2"></i> Cetak Tagihan </a>
+                            {{-- <a id="cetak-tagihan" href="{{ route('cetak-tagihan') }}" target="_blank" class="btn btn-success text-right mb-3" style="border-radius: 10px;"><i class="fa-solid fa-print mr-2"></i> Cetak Tagihan </a> --}}
                         @endcan
-                        {{-- @include('pages.admin.tagihan.table') --}}
                         <table id="bootstrap-data-table" class="table table-striped table-bordered">
                             <thead>
                                 <tr>
@@ -202,6 +229,31 @@
 </div>
 
 <script>
+    function kirimDataExel()
+    {
+        const bulan = document.getElementById("bulanTagihan").value;
+        const lokasi = document.getElementById("lokasi").value;
+        const src="report-tagihan/" + bulan + "/" + lokasi;
+        window.location.href=src;
+    }
+
+    function kirimDataCetak()
+    {
+        const bulan = document.getElementById("bulanTagihan").value;
+        const lokasi = document.getElementById("lokasi").value;
+        const src="cetak-tagihan/" + bulan + "/" + lokasi;
+        window.open(src);
+    }
+
+    function kirimDataDiskon()
+    {
+        const bulan = document.getElementById("bulanTagihan").value;
+        const lokasi = document.getElementById("lokasi").value;
+        const src="tagihan-diskon/" + bulan + "/" + lokasi;
+        window.location.href=src;
+    }
+
+
     function kirimData() {
                 const bulanTagihan= document.getElementById('periode').value;
                 $.ajax({

@@ -12,7 +12,7 @@
 
             <div class="user-area dropdown float-right">
                 <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img class="user-avatar rounded-circle" src="https://ui-avatars.com/api/?name=Admin" alt="User Avatar">
+                    <img class="user-avatar rounded-circle" src="https://ui-avatars.com/api/?name={{ Auth::user()->roles }}" alt="User Avatar">
                 </a>
 
                 <div class="user-menu dropdown-menu">

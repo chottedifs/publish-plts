@@ -40,11 +40,6 @@
                                 {{-- <a href="{{ route('export-laporan') }}" class="btn btn-success text-right" onclick="kirimData()" style="border-radius: 10px;"><i class="fa-solid fa-cloud-arrow-down mr-2"></i> Download Report </a> --}}
                             </div>
                         @endcan
-                        @can('admin')
-                            <div class="float-right">
-                                <a href="{{ route('export-tagihan-diskon') }}" class="btn btn-success text-right" style="border-radius: 10px;"><i class="fa-solid fa-file-export mr-2"></i> Proses Pembayaran</a>
-                            </div>
-                        @endcan
                         <form class="form-inline" action="{{ route('historiTagihan') }}" method="get">
                             @csrf
                             <div class="form-group mx-sm-3 mb-2">
@@ -54,8 +49,8 @@
                             <div class="form-group mx-sm-3 mb-2">
                                 <select name="status_tagihan" id="status_tagihan" class="form-control @error('lokasi') is-invalid @enderror">
                                     <option value="null" disabled selected hidden>Status Tagihan</option>
-                                    <option value="0">BELUM TERBAYAR</option>
-                                    <option value="1">TERBAYAR</option>
+                                    <option value="1">BELUM TERBAYAR</option>
+                                    <option value="3">TERBAYAR</option>
                                 </select>
                             </div>
                             <button type="submit" class="btn btn-primary mb-2" style="border-radius: 10px;">Cari Tagihan</button>
@@ -100,10 +95,18 @@
                                     <input type="hidden" id="periode" name="periode" value="{{ $tagihan->periode }}">
                                     <td class='text-center'>
                                         {{-- {{ $ }}   --}}
-                                        @if ($tagihan->status_bayar == 1)
-                                            <p class="badge-success py-2 mb-2" style="border-radius: 10px;">Terbayar</p>
-                                        @else
-                                            <p class="badge-danger py-2 mb-2" style="border-radius: 10px;">Belum Terbayar</p>
+                                        @if ($tagihan->master_status_id == 1)
+                                        <form action="{{ route('tagihan-StatusPembayaran', $tagihan->id) }}" method="post">
+                                            @csrf
+                                            <button class="btn btn-danger mb-2" id="pembayaran" onclick="confirm('Apakah yakin tagihan ini sudah terbayar?')" style="border-radius: 10px;">Belum Terbayar</button>
+                                            {{-- <a href="{{ route('tagihan-StatusPembayaran', $tagihan->id) }}" id="btn-belum-terbayar" class="btn-sm badge-danger" style="font-size: 14px; border-radius:10px;">Belum Terbayar</a> --}}
+                                        </form>
+                                        @elseif ($tagihan->master_status_id == 3)
+                                        <form action="{{ route('tagihan-StatusPembayaran', $tagihan->id) }}" method="post">
+                                            @csrf
+                                            <button class="btn btn-success mb-2" id="pembayaran" onclick="confirm('Apakah yakin tagihan ini belum terbayar?')" style="border-radius: 10px;">Terbayar</button>
+                                            {{-- <a href="{{ route('tagihan-StatusPembayaran', $tagihan->id) }}" id="btn-terbayar" class="btn-sm badge-success" style="font-size: 14px; border-radius:10px;">Terbayar</a> --}}
+                                        </form>
                                         @endif
                                     </td>
                                     @can('plts')
@@ -115,7 +118,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        
+
                     </div>
                 </div>
             </div>
