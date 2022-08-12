@@ -20,7 +20,7 @@ class AuthController extends Controller
 
         $token = $user->createToken('token-name')->plainTextToken;
 
-        $response[] = [
+        $response = [
             'id' => $user->id,
             'email' => $user->email,
             'nama_lengkap' => $user->User->nama_lengkap,
