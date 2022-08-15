@@ -69,7 +69,7 @@ class InformasiController extends Controller
     {
         $data = $request->all();
         $data['gambar'] = $request->file('gambar')->store(
-            'images', 'public'
+            'images/information', 'public'
         );
         $informations = Informasi::findOrFail($id);
         $informations->update($data);
