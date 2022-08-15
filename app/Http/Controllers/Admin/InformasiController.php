@@ -37,7 +37,7 @@ class InformasiController extends Controller
         ]);
 
         $validatedData['gambar'] = $request->file('gambar')->store(
-            'images', 'public'
+            'images/information', 'public'
         );
         Informasi::create($validatedData);
 
