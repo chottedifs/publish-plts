@@ -23,7 +23,7 @@ class SewaKiosController extends Controller
                 'tempat_kios' => $dataKios->RelasiKios->Kios->tempat,
                 'lokasi_kios' => $dataKios->RelasiKios->Lokasi->nama_lokasi,
                 'tagihan_terakhir' => [
-                    // 'total_tagihan' => $dataKios->Tagihan->tagihan_kios + $dataKios->Tagihan->tagihan_kwh,
+                    'total_tagihan' => $dataKios->Tagihan->tagihan_kios + $dataKios->Tagihan->tagihan_kwh,
                     'total_kwh' => $dataKios->Tagihan->total_kwh,
                     'date' => date('m-Y', strtotime($dataKios->Tagihan->periode)),
                     'status_tagihan' => $dataKios->Tagihan->MasterStatus->nama_status

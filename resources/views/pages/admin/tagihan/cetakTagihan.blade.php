@@ -37,15 +37,63 @@
             </tr>
         </table>
     </header>
+
     <hr>
+
     <section>
-        <h5 class="title-letter text-center" style="text-transform: uppercase;">Surat Tagihan Sewa Kios dan Listrik</h5>
-        <p class="text-center" style="text-transform: uppercase; font-size: 16px;">Bulan {{ date('F', strtotime($bulan)) }} Tahun {{ date('Y') }}</p>
+        <h5 class="title-letter text-center" style="text-transform: uppercase; margin-bottom: 30px;">Surat Tagihan Kantin dan Listrik</h5>
+        {{-- <p class="text-center" style="text-transform: uppercase; font-size: 16px;">Bulan {{ date('F', strtotime($bulan)) }} Tahun {{ date('Y') }}</p> --}}
     </section>
-    <section style="margin-top: 60px;">
-        <p class="body-letter">
-            Berikut adalah daftar tagihan sewa kios dan listrik :
+
+    <section>
+        <p style="margin-bottom: 30px;">
+            Kepada Yth. <br>
+            Pimpinan BPR Sehat Sejahtera <br>
+            Gedung Kampus Universitas Pamulang 3, <br>
+            Jalan Raya Puspitek No.11 Buaran, Kec. Serpong <br>
+            Kota Tangerang Selatan, Banten 15330
         </p>
+        <p>
+            Yang bertanda tangan di bawah ini : <br>
+            <table style="margin-bottom: 30px;">
+                <tr>
+                    <td>Nama</td>
+                    <td style="padding-left: 40px;">:</td>
+                    <td>
+                        @if ( !Auth::user()->roles = "admin")
+                            {{ Auth::user()->Petugas->nama_lengkap }}
+                        @else
+                            {{ Auth::user()->Admin->nama_lengkap }}
+                        @endif
+                    </td>
+                </tr>
+                <tr>
+                    <td>NIK</td>
+                    <td style="padding-left: 40px;">:</td>
+                    <td>xxxxxxxxxxxx</td>
+                </tr>
+                <tr>
+                    <td>Alamat</td>
+                    <td style="padding-left: 40px;">:</td>
+                    <td>Perum Sasmita Loka B No.20 RT/RW 002/004 Kel. Pamulang Barat Kec. Pamulang Kota Tangerang Selatan</td>
+                </tr>
+                <tr>
+                    <td>No. HP</td>
+                    <td style="padding-left: 40px;">:</td>
+                    <td>
+                        @if ( !Auth::user()->roles = "admin")
+                            {{ Auth::user()->Petugas->no_hp }}
+                        @else
+                            {{ Auth::user()->Admin->no_hp }}
+                        @endif
+                    </td>
+                </tr>
+            </table>
+            Mengajukan perintah pendebetan untuk pembayaran kantin dengan data sebagai berikut : <br><br>
+        </p>
+    </section>
+
+    <section style="margin-top: 20px; margin-bottom: 40px;">
         <table class="table table-bordered">
             <thead>
               <tr>
@@ -72,21 +120,44 @@
             </tbody>
         </table>
     </section>
+
     <section>
         <p>
-            Demikianlah surat ini dikeluarkan, agar dapat dipergunakan sebaik-baiknya.
+            Untuk di pindah buku kan pada tanggal {{ date('d F Y') }} ke rekening : <br>
+            No. 0012010003106 <br>
+            a.n. Drs. H. Darsono <br>
+            di PT BPR Sehat Sejahtera <br><br>
+            Demikian surat perintah pendebetan ini dibuat dengan sesungguhnya, dan dapat digunakan sebagaimana mestinya.
         </p>
     </section>
+
     <section class="signature">
-        <table style="float: right; text-align:right;">
+        <table style="text-align:center; margin-top: 50px; margin-left:auto; margin-right:auto;">
             <tr>
-                <td>Tangerang Selatan, {{ date('d F Y') }}</td>
+                <td></td>
+                <td></td>
+                <td style="float: right;">Tangerang Selatan, {{ date('d F Y') }}</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">Mengetahui,</td>
+                <td> <span style="padding-right: 150px; padding-left: 150px;"></span></td>
+                <td style="text-align: center;">Koordinator Kantin</td>
             </tr>
             <tr>
                 <td style="padding-top: 40px; padding-bottom:40px;"></td>
+                <td> <span style="padding-right: 150px; padding-left: 150px;"></span></td>
+                <td style="padding-top: 40px; padding-bottom:40px;"></td>
             </tr>
             <tr>
-                <td>(<span style="padding-right: 70px; padding-left:70px;"> </span>)</td>
+                <td>(Dr. (Hc). H. Darsono.)</td>
+                <td> <span style="padding-right: 150px; padding-left: 150px;"></span></td>
+                <td style="text-align: center;">(
+                    @if ( !Auth::user()->roles = "admin")
+                            {{ Auth::user()->Petugas->nama_lengkap }}
+                    @else
+                        {{ Auth::user()->Admin->nama_lengkap }}
+                    @endif
+                )</td>
             </tr>
         </table>
     </section>
