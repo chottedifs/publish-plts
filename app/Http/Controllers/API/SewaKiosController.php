@@ -15,7 +15,7 @@ class SewaKiosController extends Controller
         $kios = SewaKios::with('RelasiKios', 'Tagihan')->where('user_id', Auth::user()->User->id)->get();
 
         foreach ($kios as $dataKios){
-            $response = [
+            $response [] = [
                 'id_sewa' => $dataKios->id,
                 'nama_kios' => $dataKios->RelasiKios->Kios->nama_kios,
                 'tipe_kios' => $dataKios->RelasiKios->TarifKios->tipe,
