@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Informasi;
 use RealRashid\SweetAlert\Facades\Alert;
+use App\Http\Controllers\CloudinaryStorage;
 
 class InformasiController extends Controller
 {
@@ -14,7 +15,8 @@ class InformasiController extends Controller
         $informations = Informasi::all();
         return view('pages.admin.informasi.index', [
             'judul' => 'Master Data Informasi',
-            'informasi' => $informations
+            'informasi' => $informations,
+            // 'gambar' => Informasi::get()
         ]);
     }
 
@@ -36,9 +38,14 @@ class InformasiController extends Controller
             'gambar.*' => 'mimes:jpg,jpeg,png|max:1000',
         ]);
 
-        $validatedData['gambar'] = $request->file('gambar')->store(
-            'images/information', 'public'
-        );
+        $gambar =$request->file('gambar');
+
+        $validatedData['gambar'] = CloudinaryStorage::upload($gambar->getRealPath(), $gambar->getClientOriginalName());
+
+        // $validatedData['gambar'] = $request->file('gambar')->store(
+        //     'images/information', 'public'
+        // );
+
         Informasi::create($validatedData);
 
         Alert::toast('Data informasi berhasil ditambahkan!','success');
@@ -65,13 +72,19 @@ class InformasiController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Informasi $informations)
     {
         $data = $request->all();
-        $data['gambar'] = $request->file('gambar')->store(
-            'images/information', 'public'
-        );
-        $informations = Informasi::findOrFail($id);
+
+        $gambar =$request->file('gambar');
+
+        $data['gambar'] = CloudinaryStorage::replace($informations->gambar, $gambar->getRealPath(), $gambar->getClientOriginalName());
+
+        // $data['gambar'] = $request->file('gambar')->store(
+        //     'images/information', 'public'
+        // );
+
+        // $informations = Informasi::findOrFail($id);
         $informations->update($data);
 
         Alert::toast('Data informasi berhasil diupdate!','success');
