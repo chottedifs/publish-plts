@@ -37,7 +37,10 @@ class TagihanController extends Controller
                     'kwh' => $dataTagihan->total_kwh,
                     'tagihan_kwh' => $dataTagihan->tagihan_kwh,
                     'total_tagihan' => $dataTagihan->tagihan_kwh + $dataTagihan->tagihan_kios,
-                    'status_bayar' => $dataTagihan->MasterStatus->nama_status
+                    'status_bayar' => [
+                        'id' => $dataTagihan->MasterStatus->id,
+                        'name' => $dataTagihan->MasterStatus->nama_status,
+                    ]
                 ];
             };
 
