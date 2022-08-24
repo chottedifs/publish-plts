@@ -12,10 +12,14 @@ class TagihanController extends Controller
 {
     public function all(Request $request){
         $year = $request->input('year');
+        $kios = $request->input('kios');
 
-        if($year) {
+        if($year&&$kios) {
             $tagihan = Tagihan::with('SewaKios','MasterStatus')
-                        ->where('user_id', Auth::user()->User->id)
+                        ->where([
+                            'user_id' => Auth::user()->User->id,
+                            'sewa_kios_id' => $kios
+                        ])
                         ->whereYear('periode', $year)
                         ->get();
 
