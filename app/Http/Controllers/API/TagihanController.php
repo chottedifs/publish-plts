@@ -11,12 +11,12 @@ use Auth;
 class TagihanController extends Controller
 {
     public function all(Request $request){
-        $tahun = $request->input('tahun');
+        $year = $request->input('year');
 
-        if($tahun) {
+        if($year) {
             $tagihan = Tagihan::with('SewaKios','MasterStatus')
                         ->where('user_id', Auth::user()->User->id)
-                        ->whereYear('periode', $tahun)
+                        ->whereYear('periode', $year)
                         ->get();
 
             foreach ($tagihan as $dataTagihan){
